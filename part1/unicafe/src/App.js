@@ -15,6 +15,11 @@ const App = () => {
   const addNeutralCount = () => { setNeutral(neutral + 1) }
   const addBadCount = () => { setBad(bad + 1) }
 
+  // Functions
+  const sumAll = good + neutral + bad
+  const average = (good * 1 + neutral * 0 + bad * -1) / sumAll
+  const positive = (good / sumAll) * 100
+
   return (
     <div>
       <h1>give feedback</h1>
@@ -25,6 +30,9 @@ const App = () => {
       <p>good {good}</p>
       <p>neutral {neutral}</p>
       <p>bad {bad}</p>
+      <p>all {sumAll}</p>
+      <p>average {average}</p>
+      <p>positive {positive} %</p>
     </div>
   )
 }
