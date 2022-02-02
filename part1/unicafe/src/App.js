@@ -5,21 +5,32 @@ const Button = ({onClick, text}) => {
 }
 
 const StatisticLine = ({count, text}) => {
-  return text === 'positive' ?  <p>{text} {count} %</p>: <p>{text} {count}</p>
+  return (text === 'positive'
+    ?<tr>
+      <td>{text}</td>
+      <td>{count} %</td>
+    </tr>
+    :<tr>
+      <td>{text}</td>
+      <td>{count}</td>
+    </tr>
+  )
 }
 
 const Statistics = ({statistics}) => {
   return ( 
     (statistics.good === 0 && statistics.neutral === 0 && statistics.bad === 0)
       ?<p>No Feedback given</p>
-      :<>
-        <StatisticLine count={statistics.good} text='good' />
-        <StatisticLine count={statistics.neutral} text='neutral' />
-        <StatisticLine count={statistics.bad} text='bad' />
-        <StatisticLine count={statistics.all} text='all' />
-        <StatisticLine count={statistics.average} text='average' />
-        <StatisticLine count={statistics.positive} text='positive' />
-      </>
+      :<table>
+        <tbody>
+          <StatisticLine count={statistics.good} text='good' />
+          <StatisticLine count={statistics.neutral} text='neutral' />
+          <StatisticLine count={statistics.bad} text='bad' />
+          <StatisticLine count={statistics.all} text='all' />
+          <StatisticLine count={statistics.average} text='average' />
+          <StatisticLine count={statistics.positive} text='positive' />
+        </tbody>
+      </table>
   )
 }
 
