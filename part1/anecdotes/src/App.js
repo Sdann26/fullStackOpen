@@ -1,5 +1,9 @@
 import React, { useState } from 'react'
 
+const Button = ({onClick, text}) => {
+  return <button onClick={onClick}>{text}</button>
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often',
@@ -10,16 +14,28 @@ const App = () => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients'
   ]
-   
+  
+  // States
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0))
+
+  // Functions
   const randomValue = () => {
     setSelected(Math.floor(Math.random() * 7))
+  }
+
+  const addVote = () => {
+    const copyVotes = [...votes]
+    copyVotes[selected] += 1
+    setVotes(copyVotes)
   }
 
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <button onClick={randomValue}>next anecdote</button>
+      <p>has {votes[selected]} votes</p>
+      <Button onClick={addVote} text='vote' />
+      <Button onClick={randomValue} text='next anecdote' />
     </div>
   )
 }
