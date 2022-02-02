@@ -4,6 +4,15 @@ const Button = ({onClick, text}) => {
   return <button onClick={onClick}>{text}</button>
 }
 
+const Display = ({anecdotes, votes, index})=>{
+  return (
+    <>
+      <p>{anecdotes[index]}</p>
+      <p>has {votes[index]} votes</p>
+    </>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often',
@@ -18,6 +27,7 @@ const App = () => {
   // States
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0))
+  const [anecdoteMostVoted, setAnecdoteMostVoted] = useState(0)
 
   // Functions
   const randomValue = () => {
@@ -28,14 +38,21 @@ const App = () => {
     const copyVotes = [...votes]
     copyVotes[selected] += 1
     setVotes(copyVotes)
+    setAnecdoteMostVoted(Math.max(...copyVotes))
   }
 
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
-      <p>has {votes[selected]} votes</p>
+      <h1>Anecdote of the day</h1>
+      <Display anecdotes={anecdotes} votes={votes} index={selected} />
       <Button onClick={addVote} text='vote' />
       <Button onClick={randomValue} text='next anecdote' />
+      {Math.max(...votes) === 0 
+        ? <></> 
+        : <>
+            <h1>Anecdote with most votes</h1> 
+            <Display anecdotes={anecdotes} votes={votes} index={votes.indexOf(anecdoteMostVoted)}></Display>
+          </>}
     </div>
   )
 }
