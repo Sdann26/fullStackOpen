@@ -5,16 +5,17 @@ const Button = ({onClick, text}) => {
 }
 
 const Statistics = ({statistics}) => {
-  return (
-    <>
-      <h1>statistics</h1>
-      <p>good {statistics.good}</p>
-      <p>neutral {statistics.neutral}</p>
-      <p>bad {statistics.bad}</p>
-      <p>all {statistics.all}</p>
-      <p>average {statistics.average}</p>
-      <p>positive {statistics.positive} %</p>
-    </>
+  return ( 
+    (statistics.good === 0 && statistics.neutral === 0 && statistics.bad === 0)
+      ?<p>No Feedback given</p>
+      :<>
+        <p>good {statistics.good}</p>
+        <p>neutral {statistics.neutral}</p>
+        <p>bad {statistics.bad}</p>
+        <p>all {statistics.all}</p>
+        <p>average {statistics.average}</p>
+        <p>positive {statistics.positive} %</p>
+      </>
   )
 }
 
@@ -44,6 +45,7 @@ const App = () => {
       <Button onClick={addGoodCount} text='good' />
       <Button onClick={addNeutralCount} text='neutral' />
       <Button onClick={addBadCount} text='bad' />
+      <h1>statistics</h1>
       <Statistics statistics={statistics}/>
     </div>
   )
