@@ -3,7 +3,8 @@ import React, { useState } from 'react'
 const App = () => {
   // States
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas' },
+    { name: 'Marinela' }
   ]) 
   const [newName, setNewName] = useState('')
 
@@ -11,11 +12,22 @@ const App = () => {
   const handleAddName = (e) => {
     setNewName(e.target.value)
   }
-  console.log(newName);
+
+  const existingUserAlert = (name) => {
+    const existingNames = persons.find(person => person.name === name.trim())
+    if (existingNames === undefined){
+      return false
+    }
+    alert(`${name.trim()} is already added to phonebook`)
+    return true
+  } 
 
   const sendForm = (e) => {
     e.preventDefault()
-    setPersons(persons.concat({name: newName}))
+    if (existingUserAlert(newName)){
+      return
+    }
+    setPersons(persons.concat({name: newName.trim()}))
     setNewName('')
   }
 
