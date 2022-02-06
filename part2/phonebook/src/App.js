@@ -3,16 +3,12 @@ import React, { useState } from 'react'
 const App = () => {
   // States
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' },
-    { name: 'Marinela' }
+    { name: 'Arto Hellas', phone: '040-1234567' }
   ]) 
   const [newName, setNewName] = useState('')
+  const [newPhone, setNewPhone] = useState('')
 
-  // handleEvent and onSubmit
-  const handleAddName = (e) => {
-    setNewName(e.target.value)
-  }
-
+  // Functions 
   const existingUserAlert = (name) => {
     const existingNames = persons.find(person => person.name === name.trim())
     if (existingNames === undefined){
@@ -22,13 +18,28 @@ const App = () => {
     return true
   } 
 
+  // handleEvent and onSubmit
+  const handleAddName = (e) => {
+    setNewName(e.target.value)
+  }
+
+  const handleAddPhone = (e) => {
+    setNewPhone(e.target.value)
+  }
+
   const sendForm = (e) => {
     e.preventDefault()
     if (existingUserAlert(newName)){
       return
     }
-    setPersons(persons.concat({name: newName.trim()}))
+    setPersons(
+      persons.concat(
+        {name: newName.trim(),
+        phone: newPhone
+        })
+    )
     setNewName('')
+    setNewPhone('')
   }
 
   return (
@@ -36,7 +47,8 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={sendForm}>
         <div>
-          name: <input onChange={handleAddName} value={newName}/>
+          <div>name: <input onChange={handleAddName} value={newName} required /></div>
+          <div>number: <input onChange={handleAddPhone} value={newPhone} required /></div>
         </div>
         <div>
           <button type="submit">add</button>
@@ -44,7 +56,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       {persons.map((person, id)=>{
-        return <p key={id}>{person.name}</p>
+        return <p key={id}>{person.name} {person.phone}</p>
       })}
     </div>
   )
