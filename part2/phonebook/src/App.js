@@ -1,42 +1,58 @@
 import React, { useState } from 'react'
+import Filter from './components/Filter'
+import Persons from './components/Persons'
+import Form from './components/Form'
 
 const App = () => {
+
   // States
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', phone: '040-1234567' }
-  ]) 
+    { name: 'Arto Hellas', number: '040-123456'},
+    { name: 'Ada Lovelace', number: '39-44-5323523'},
+    { name: 'Dan Abramov', number: '12-43-234345'},
+    { name: 'Mary Poppendieck', number: '39-23-6423122'}
+  ])
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
+  const [filterPersons, setFilterPersons] = useState(persons)
 
-  // Functions 
+  // Functions
   const existingUserAlert = (name) => {
-    const existingNames = persons.find(person => person.name === name.trim())
-    if (existingNames === undefined){
-      return false
+    const allPersons = persons.map(person => person.name)
+    if (allPersons.includes(name)){
+      alert(`${name} is already added to phonebook`)
+      return true
     }
-    alert(`${name.trim()} is already added to phonebook`)
-    return true
-  } 
+    return false
+  }
 
-  // handleEvent and onSubmit
-  const handleAddName = (e) => {
+  // handleEvent
+  const addName = (e) => {
     setNewName(e.target.value)
   }
 
-  const handleAddPhone = (e) => {
+  const addPhone = (e) => {
     setNewPhone(e.target.value)
   }
 
+  // submitEvent
   const sendForm = (e) => {
     e.preventDefault()
-    if (existingUserAlert(newName)){
+    if (existingUserAlert(newName.trim())){
       return
     }
+    console.log(persons);
     setPersons(
       persons.concat(
         {name: newName.trim(),
-        phone: newPhone
-        })
+        number: newPhone}
+      )
+    )
+    setFilterPersons(
+      persons.concat(
+        {name: newName.trim(),
+        number: newPhone}
+      )
     )
     setNewName('')
     setNewPhone('')
@@ -44,20 +60,12 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
-      <form onSubmit={sendForm}>
-        <div>
-          <div>name: <input onChange={handleAddName} value={newName} required /></div>
-          <div>number: <input onChange={handleAddPhone} value={newPhone} required /></div>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <h1>Phonebook</h1>
+      <Filter persons={persons} setFilterPersons={setFilterPersons} />
+      <h2>add a new</h2>
+      <Form onSubmit={sendForm} texts={['name', 'phone']} inputOnChange={[addName, addPhone]} inputValues={[newName, newPhone]} />
       <h2>Numbers</h2>
-      {persons.map((person, id)=>{
-        return <p key={id}>{person.name} {person.phone}</p>
-      })}
+      <Persons persons={filterPersons} />
     </div>
   )
 }
