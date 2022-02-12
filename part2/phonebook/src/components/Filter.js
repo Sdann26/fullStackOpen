@@ -1,14 +1,7 @@
-const Filter = ({persons, setFilterPersons}) => {
-  const searchNumbers = (e) => {
-    const filteredPersons = persons.filter((person) => {
-      const name = person.name.toLowerCase()
-      return name.includes(e.target.value)
-    })
-    setFilterPersons(filteredPersons)
-  }
+const Filter = ({filtered, searchName}) => {
   return (
     <>
-      <span>filter shown with </span><input onChange={searchNumbers} defaultValue={''}/>
+      <span>filter shown with </span><input onChange={filtered} value={searchName}/>
     </>
   )
 }

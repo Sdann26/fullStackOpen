@@ -1,20 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+
 import Filter from './components/Filter'
 import Persons from './components/Persons'
 import Form from './components/Form'
 
 const App = () => {
 
+  useEffect(()=>{
+    axios
+      .get('http://localhost:3001/persons')
+      .then(res=>setPersons(res.data))
+  }
+  ,[])
+
   // States
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456'},
-    { name: 'Ada Lovelace', number: '39-44-5323523'},
-    { name: 'Dan Abramov', number: '12-43-234345'},
-    { name: 'Mary Poppendieck', number: '39-23-6423122'}
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
-  const [filterPersons, setFilterPersons] = useState(persons)
+  const [searchName, setSearchName] = useState('');
 
   // Functions
   const existingUserAlert = (name) => {
@@ -26,6 +30,11 @@ const App = () => {
     return false
   }
 
+  const filteredPersons = persons.filter((person) => {
+    const name = person.name.toLowerCase()
+    return name.includes(searchName)
+  })
+
   // handleEvent
   const addName = (e) => {
     setNewName(e.target.value)
@@ -35,20 +44,17 @@ const App = () => {
     setNewPhone(e.target.value)
   }
 
+  const filtered = (e) => {
+    setSearchName(e.target.value)
+  }
+
   // submitEvent
   const sendForm = (e) => {
     e.preventDefault()
     if (existingUserAlert(newName.trim())){
       return
     }
-    console.log(persons);
     setPersons(
-      persons.concat(
-        {name: newName.trim(),
-        number: newPhone}
-      )
-    )
-    setFilterPersons(
       persons.concat(
         {name: newName.trim(),
         number: newPhone}
@@ -56,16 +62,17 @@ const App = () => {
     )
     setNewName('')
     setNewPhone('')
+    setSearchName('')
   }
 
   return (
     <div>
       <h1>Phonebook</h1>
-      <Filter persons={persons} setFilterPersons={setFilterPersons} />
+      <Filter filtered={filtered} searchName={searchName}/>
       <h2>add a new</h2>
       <Form onSubmit={sendForm} texts={['name', 'phone']} inputOnChange={[addName, addPhone]} inputValues={[newName, newPhone]} />
       <h2>Numbers</h2>
-      <Persons persons={filterPersons} />
+      <Persons persons={filteredPersons} />
     </div>
   )
 }
