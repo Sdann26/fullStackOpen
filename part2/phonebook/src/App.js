@@ -11,7 +11,8 @@ const App = () => {
     axios
       .get('http://localhost:3001/persons')
       .then(res=>setPersons(res.data))
-  }, [])
+  }
+  ,[])
 
   // States
   const [persons, setPersons] = useState([])
