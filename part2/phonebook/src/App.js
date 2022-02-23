@@ -31,7 +31,7 @@ const App = () => {
 
   const filteredPersons = persons.filter((person) => {
     const name = person.name.toLowerCase()
-    return name.includes(searchName)
+    return name.includes(searchName.toLowerCase())
   })
 
   // handleEvent
@@ -53,6 +53,12 @@ const App = () => {
     if (existingUserAlert(newName.trim())){
       return
     }
+
+    axios
+      .post('http://localhost:3001/persons', {name: newName.trim(), number: newPhone})
+      .then((res)=>console.log(res))
+        
+
     setPersons(
       persons.concat(
         {name: newName.trim(),
