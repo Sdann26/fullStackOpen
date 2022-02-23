@@ -10,8 +10,12 @@ import phoneServices from './services/phoneServices'
 const App = () => {
 
   useEffect(()=>{
-    phoneServices.getPhoneData('http://localhost:3001/persons')
-      .then(res=>setPersons(res.data))
+    phoneServices
+      .getPhoneData('http://localhost:3001/persons')
+      .then(res=>{
+        setPersons(res.data)
+        setPersonFilter(res.data)
+      })
   }, [])
 
 
@@ -20,6 +24,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [searchName, setSearchName] = useState('');
+  const [personsFilter, setPersonFilter] = useState([])
 
   // Functions
   const existingUserAlert = (name) => {
@@ -30,11 +35,6 @@ const App = () => {
     }
     return false
   }
-
-  const filteredPersons = persons.filter((person) => {
-    const name = person.name.toLowerCase()
-    return name.includes(searchName.toLowerCase())
-  })
 
   // handleEvent
   const addName = (e) => {
@@ -47,6 +47,10 @@ const App = () => {
 
   const filtered = (e) => {
     setSearchName(e.target.value)
+    setPersonFilter(persons.filter((person) => {
+      const name = person.name.toLowerCase()
+      return name.includes(e.target.value.toLowerCase())
+    }))
   }
 
   // submitEvent
@@ -56,16 +60,15 @@ const App = () => {
       return
     }
 
-    phoneServices.addNewPhone('http://localhost:3001/persons', {name: newName.trim(), number: newPhone})
-      .then((res)=>console.log(res))
-        
+    phoneServices
+      .addNewPhone('http://localhost:3001/persons', {name: newName.trim(), number: newPhone})
+      .then((res)=>{
+        setPersons(
+          persons.concat(res.data)
+        )
+        setPersonFilter(persons.concat(res.data))
+      })
 
-    setPersons(
-      persons.concat(
-        {name: newName.trim(),
-        number: newPhone}
-      )
-    )
     setNewName('')
     setNewPhone('')
     setSearchName('')
@@ -78,7 +81,7 @@ const App = () => {
       <h2>add a new</h2>
       <Form onSubmit={sendForm} texts={['name', 'phone']} inputOnChange={[addName, addPhone]} inputValues={[newName, newPhone]} />
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons} />
+      <Persons persons={personsFilter} setPersonFilter={setPersonFilter}/>
     </div>
   )
 }
