@@ -5,13 +5,15 @@ import Filter from './components/Filter'
 import Persons from './components/Persons'
 import Form from './components/Form'
 
+import phoneServices from './services/phoneServices'
+
 const App = () => {
 
   useEffect(()=>{
-    axios
-      .get('http://localhost:3001/persons')
+    phoneServices.getPhoneData('http://localhost:3001/persons')
       .then(res=>setPersons(res.data))
   }, [])
+
 
   // States
   const [persons, setPersons] = useState([])
@@ -54,8 +56,7 @@ const App = () => {
       return
     }
 
-    axios
-      .post('http://localhost:3001/persons', {name: newName.trim(), number: newPhone})
+    phoneServices.addNewPhone('http://localhost:3001/persons', {name: newName.trim(), number: newPhone})
       .then((res)=>console.log(res))
         
 
