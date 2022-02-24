@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 
 import Filter from './components/Filter'
 import Persons from './components/Persons'
@@ -11,10 +10,9 @@ const App = () => {
 
   useEffect(()=>{
     phoneServices
-      .getPhoneData('http://localhost:3001/persons')
+      .getPhoneData()
       .then(res=>{
         setPersons(res.data)
-        setPersonFilter(res.data)
       })
   }, [])
 
@@ -24,16 +22,11 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [searchName, setSearchName] = useState('');
-  const [personsFilter, setPersonFilter] = useState([])
 
   // Functions
   const existingUserAlert = (name) => {
-    const allPersons = persons.map(person => person.name)
-    if (allPersons.includes(name)){
-      alert(`${name} is already added to phonebook`)
-      return true
-    }
-    return false
+    const allPersons = persons.map(person => person.name.toLowerCase())
+    return allPersons.includes(name.toLowerCase())? true: false
   }
 
   // handleEvent
@@ -45,43 +38,44 @@ const App = () => {
     setNewPhone(e.target.value)
   }
 
-  const filtered = (e) => {
-    setSearchName(e.target.value)
-    setPersonFilter(persons.filter((person) => {
-      const name = person.name.toLowerCase()
-      return name.includes(e.target.value.toLowerCase())
-    }))
-  }
-
   // submitEvent
   const sendForm = (e) => {
     e.preventDefault()
     if (existingUserAlert(newName.trim())){
-      return
+      const personUpdate = persons.find(person => person.name.toLowerCase() === newName.trim().toLowerCase())
+      if(window.confirm(`${newName.trim()} is already added to phonebook, replace the old number with a new one?`)){
+        phoneServices
+          .updatePhone(personUpdate.id, {name: newName.trim(), number: newPhone})
+          .then((res)=>{
+            setPersons(persons.map((person)=>person.id === personUpdate.id? res.data: person))
+            setNewName('')
+            setNewPhone('')
+            setSearchName('')
+          })
+      }
     }
-
-    phoneServices
-      .addNewPhone('http://localhost:3001/persons', {name: newName.trim(), number: newPhone})
-      .then((res)=>{
-        setPersons(
-          persons.concat(res.data)
-        )
-        setPersonFilter(persons.concat(res.data))
-      })
-
-    setNewName('')
-    setNewPhone('')
-    setSearchName('')
+    else{ 
+      phoneServices
+        .addNewPhone({name: newName.trim(), number: newPhone})
+        .then((res)=>{
+          setPersons(
+            persons.concat(res.data)
+          )
+          setNewName('')
+          setNewPhone('')
+          setSearchName('')
+        })
+    }
   }
 
   return (
     <div>
       <h1>Phonebook</h1>
-      <Filter filtered={filtered} searchName={searchName}/>
+      <Filter setSearchName={setSearchName} searchName={searchName}/>
       <h2>add a new</h2>
       <Form onSubmit={sendForm} texts={['name', 'phone']} inputOnChange={[addName, addPhone]} inputValues={[newName, newPhone]} />
       <h2>Numbers</h2>
-      <Persons persons={personsFilter} setPersonFilter={setPersonFilter}/>
+      <Persons persons={persons} setPersons={setPersons} searchName={searchName} />
     </div>
   )
 }
