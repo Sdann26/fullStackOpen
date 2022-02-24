@@ -10,7 +10,7 @@ const Form = ({onSubmit, texts, inputOnChange, inputValues})=> {
   return(
     <form onSubmit={onSubmit}>
       <div>
-        {texts.map((_, i)=><Input key={i} text={texts[i]} onChange={inputOnChange[i]} value={inputValues[i]} />)}
+        {texts.map((text, i)=><Input key={i} text={text} onChange={inputOnChange[i]} value={inputValues[i]} />)}
       </div>
       <div>
         <button type="submit">add</button>
