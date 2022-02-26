@@ -1,0 +1,17 @@
+.add{
+    padding: .5em;
+    font-size: 1.2rem;
+    color: green;
+    background-color: lightgray;
+    border: 3px solid green;
+    border-radius: 5px;
+}
+
+.update-error{
+    padding: .5em;    
+    font-size: 1.2rem;
+    color: red;
+    background-color: lightgray;
+    border: 3px solid red;
+    border-radius: 5px;
+}
