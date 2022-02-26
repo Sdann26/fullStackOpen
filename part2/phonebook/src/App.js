@@ -3,8 +3,11 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
 import Form from './components/Form'
+import Notification from './components/Notification'
 
 import phoneServices from './services/phoneServices'
+
+import './style.css'
 
 const App = () => {
 
@@ -22,6 +25,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [searchName, setSearchName] = useState('');
+  const [notification, setNotification] = useState({message: null, type: null});
 
   // Functions
   const existingUserAlert = (name) => {
@@ -52,6 +56,12 @@ const App = () => {
             setNewPhone('')
             setSearchName('')
           })
+          .catch(()=>{
+            setNotification({message: `Information of ${newName.trim()} has already been removed from server`, type: 'U'})
+            setTimeout(()=>{
+              setNotification({message: null, type: null})
+            }, 5000)
+          })
       }
     }
     else{ 
@@ -61,6 +71,12 @@ const App = () => {
           setPersons(
             persons.concat(res.data)
           )
+
+          setNotification({message: `Added ${newName.trim()}`, type: 'A'})
+          setTimeout(()=>{
+            setNotification({message: null, type: null})
+          }, 5000)
+
           setNewName('')
           setNewPhone('')
           setSearchName('')
@@ -71,6 +87,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={notification.message} type={notification.type} />
       <Filter setSearchName={setSearchName} searchName={searchName}/>
       <h2>add a new</h2>
       <Form onSubmit={sendForm} texts={['name', 'phone']} inputOnChange={[addName, addPhone]} inputValues={[newName, newPhone]} />
