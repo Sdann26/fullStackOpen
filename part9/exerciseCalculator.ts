@@ -8,7 +8,7 @@ interface Result {
   average: number
 }
 
-const parseArgumentsCalculator = (args: Array<string>): { value1: number[], value2: number } => {
+/* const parseArgumentsCalculator = (args: Array<string>): { value1: number[], value2: number } => {
   if (args.length < 4) throw new Error('Not enough arguments');
 
   const [, , targetValueRaw, ...daysValuesRaw] = args;
@@ -24,7 +24,7 @@ const parseArgumentsCalculator = (args: Array<string>): { value1: number[], valu
   } else {
     throw new Error('Provided values were not numbers!');
   }
-};
+}; */
 
 const calculateExercises = (days: number[], target: number): Result => {
   if (days.some(day => day < 0) || target <= 0) throw new Error('The hours cannot be negative');
@@ -61,9 +61,11 @@ const calculateExercises = (days: number[], target: number): Result => {
   };
 };
 
-try {
+/* try {
   const { value1, value2 } = parseArgumentsCalculator(process.argv);
   console.log(calculateExercises(value1, value2));
 } catch (error) {
   console.error(error);
-}
+} */
+
+export default calculateExercises;
