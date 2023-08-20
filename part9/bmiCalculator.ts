@@ -1,4 +1,4 @@
-const parseArguments = (args: Array<string>): { value1: number, value2: number } => {
+/* const parseArguments = (args: Array<string>): { value1: number, value2: number } => {
   if (args.length < 4) throw new Error('Not enough arguments');
   if (args.length > 4) throw new Error('Too many arguments');
 
@@ -10,7 +10,7 @@ const parseArguments = (args: Array<string>): { value1: number, value2: number }
   } else {
     throw new Error('Provided values were not numbers!');
   }
-};
+}; */
 
 /**
  * @param {number} height - in cm
@@ -28,9 +28,11 @@ const calculateBmi = (height: number, weight: number): string => {
   else return 'Obese (Class III)';
 };
 
-try {
+/* try {
   const { value1, value2 } = parseArguments(process.argv);
   console.log(calculateBmi(value1, value2));
 } catch (error) {
   console.error(error);
-}
+} */
+
+export default calculateBmi
